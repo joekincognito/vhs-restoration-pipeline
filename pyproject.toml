@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "vhs-restoration-pipeline"
+version = "2.0.0"
+description = "Modular video restoration pipeline for digitized VHS footage"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    { name = "joekincognito" },
+]
+
+[project.scripts]
+vhs-restore = "vhs_restore.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]

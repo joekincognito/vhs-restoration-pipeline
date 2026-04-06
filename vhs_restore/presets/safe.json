@@ -1,0 +1,23 @@
+{
+  "deinterlace": {
+    "enabled": true,
+    "mode": "bwdif",
+    "parity": 0
+  },
+  "denoise": {
+    "enabled": true,
+    "mode": "hqdn3d",
+    "strength": "light"
+  },
+  "stabilize": {
+    "enabled": false
+  },
+  "color": {
+    "enabled": true,
+    "auto_levels": true,
+    "saturation": 1.0
+  },
+  "upscale": {
+    "enabled": false
+  }
+}

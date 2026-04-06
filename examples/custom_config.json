@@ -1,0 +1,21 @@
+{
+  "_comment": "Example custom config — layer this on top of any preset with --config",
+  "denoise": {
+    "mode": "nlmeans",
+    "strength": "light"
+  },
+  "stabilize": {
+    "enabled": true,
+    "smoothing": 15
+  },
+  "color": {
+    "enabled": true,
+    "saturation": 1.2,
+    "gamma": 1.1
+  },
+  "upscale": {
+    "enabled": true,
+    "scale": 2,
+    "esrgan_path": "/path/to/realesrgan-ncnn-vulkan"
+  }
+}

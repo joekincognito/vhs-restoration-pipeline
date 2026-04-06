@@ -1,0 +1,30 @@
+{
+  "deinterlace": {
+    "enabled": true,
+    "mode": "bwdif",
+    "parity": 0
+  },
+  "denoise": {
+    "enabled": true,
+    "mode": "nlmeans",
+    "strength": "medium"
+  },
+  "stabilize": {
+    "enabled": true,
+    "smoothing": 10,
+    "crop": "keep",
+    "zoom": 0,
+    "optzoom": 2
+  },
+  "color": {
+    "enabled": true,
+    "auto_levels": true,
+    "saturation": 1.15
+  },
+  "upscale": {
+    "enabled": true,
+    "scale": 2,
+    "model": "realesrgan-x4plus",
+    "fallback_to_lanczos": true
+  }
+}
