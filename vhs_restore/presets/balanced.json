@@ -24,7 +24,7 @@
   "upscale": {
     "enabled": true,
     "scale": 2,
-    "model": "realesrgan-x4plus",
+    "model": "realesr-animevideov3",
     "fallback_to_lanczos": true
   }
 }

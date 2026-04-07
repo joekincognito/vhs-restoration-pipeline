@@ -20,6 +20,10 @@ DEFAULT_CONFIG = {
         "mode": "hqdn3d",
         "strength": "medium",
     },
+    "sharpen": {
+        "enabled": False,
+        "strength": "light",
+    },
     "stabilize": {
         "enabled": False,
         "smoothing": 10,
@@ -44,7 +48,7 @@ DEFAULT_CONFIG = {
 }
 
 # Ordered list of steps (this determines pipeline execution order)
-STEP_ORDER = ["deinterlace", "denoise", "stabilize", "color", "upscale"]
+STEP_ORDER = ["deinterlace", "denoise", "sharpen", "stabilize", "color", "upscale"]
 
 
 def load_preset(name: str) -> dict:

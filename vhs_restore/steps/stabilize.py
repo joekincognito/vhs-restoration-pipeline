@@ -57,13 +57,17 @@ class StabilizeStep(PipelineStep):
         transforms_path = transforms_file.name
         transforms_file.close()
 
+        # FFmpeg filter parser treats \ as escape and : as separator.
+        # Convert to forward slashes and escape colons for Windows paths.
+        filter_safe_path = transforms_path.replace("\\", "/").replace(":", "\\\\:")
+
         try:
             # Pass 1: Detect motion
             logger.info(f"[{self.name}] Pass 1/2: Analyzing motion...")
             cmd_detect = [
                 "ffmpeg", "-y",
                 "-i", str(input_path),
-                "-vf", f"vidstabdetect=shakiness=5:accuracy=15:result={transforms_path}",
+                "-vf", f"vidstabdetect=shakiness=5:accuracy=15:result={filter_safe_path}",
                 "-f", "null", "-",
             ]
             logger.debug(f"[{self.name}] Pass 1 command: {' '.join(cmd_detect)}")
@@ -77,7 +81,7 @@ class StabilizeStep(PipelineStep):
             logger.info(f"[{self.name}] Pass 2/2: Applying stabilization...")
             transform_filter = (
                 f"vidstabtransform="
-                f"input={transforms_path}:"
+                f"input={filter_safe_path}:"
                 f"smoothing={self.smoothing}:"
                 f"crop={self.crop}:"
                 f"zoom={self.zoom}:"

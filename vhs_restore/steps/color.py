@@ -28,9 +28,10 @@ class ColorStep(PipelineStep):
     def build_filter(self, input_path: Path, output_path: Path) -> list[str]:
         filters = []
 
-        # Auto-levels: normalize histogram to use full range
+        # Auto-levels: stretch histogram to use full range using built-in colorlevels
         if self.auto_levels:
-            filters.append("normalize=blackpt=black:whitept=white:smoothing=20")
+            # Clip bottom 1% and top 1% of luma/chroma to expand dynamic range
+            filters.append("colorlevels=rimin=0.01:gimin=0.01:bimin=0.01:rimax=0.99:gimax=0.99:bimax=0.99")
 
         # Manual EQ adjustments
         eq_parts = []

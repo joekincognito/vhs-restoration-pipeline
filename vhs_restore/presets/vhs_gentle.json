@@ -1,0 +1,28 @@
+{
+  "deinterlace": {
+    "enabled": false
+  },
+  "denoise": {
+    "enabled": true,
+    "mode": "hqdn3d",
+    "strength": "light"
+  },
+  "sharpen": {
+    "enabled": true,
+    "strength": "light"
+  },
+  "stabilize": {
+    "enabled": false
+  },
+  "color": {
+    "enabled": true,
+    "auto_levels": false,
+    "saturation": 1.1,
+    "contrast": 1.05,
+    "brightness": 0.02,
+    "gamma": 1.05
+  },
+  "upscale": {
+    "enabled": false
+  }
+}
