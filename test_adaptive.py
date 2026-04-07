@@ -12,11 +12,13 @@ from vhs_restore.pipeline import AdaptivePipeline
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 
-input_file = r"C:\Users\joeki\Videos\V 2 OBS.mkv"
-output_file = r"C:\Users\joeki\Videos\V 2 OBS_adaptive.mp4"
+input_file = r"C:\Users\joeki\Videos\rg2.mpg"
+output_file = r"C:\Users\joeki\Videos\rg2_adaptive.mp4"
 
-# Start with vhs_gentle as the base — adaptive will override per-scene
-config = load_config(preset="vhs_gentle")
+# Use balanced as base — this file is interlaced so we need deinterlace on
+# Adaptive will override denoise/sharpen/color per-scene
+config = load_config(preset="balanced")
+config["upscale"]["enabled"] = False  # GT 730 can't handle Real-ESRGAN
 
 pipeline = AdaptivePipeline(
     base_config=config,

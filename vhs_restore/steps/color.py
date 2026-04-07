@@ -65,6 +65,6 @@ class ColorStep(PipelineStep):
             "-c:v", "libx264",
             "-crf", "16",
             "-preset", "slow",
-            "-c:a", "copy",
+            "-c:a", "aac", "-b:a", "192k",
             str(output_path),
         ]

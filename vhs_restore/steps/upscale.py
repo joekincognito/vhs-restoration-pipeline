@@ -71,7 +71,7 @@ class UpscaleStep(PipelineStep):
             "-c:v", "libx264",
             "-crf", "16",
             "-preset", "slow",
-            "-c:a", "copy",
+            "-c:a", "aac", "-b:a", "192k",
             str(output_path),
         ]
 
@@ -151,7 +151,7 @@ class UpscaleStep(PipelineStep):
                 "-crf", "16",
                 "-preset", "slow",
                 "-pix_fmt", "yuv420p",
-                "-c:a", "copy",
+                "-c:a", "aac", "-b:a", "192k",
                 str(output_path),
             ]
             result = subprocess.run(cmd_assemble, capture_output=True, text=True)

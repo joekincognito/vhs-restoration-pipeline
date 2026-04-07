@@ -94,8 +94,8 @@ class Pipeline:
                 if is_last:
                     step_output = output_path
                 else:
-                    suffix = input_path.suffix or ".mp4"
-                    step_output = temp_dir_path / f"step_{i+1}_{name}{suffix}"
+                    # Always use .mkv for intermediates — supports any codec combo
+                    step_output = temp_dir_path / f"step_{i+1}_{name}.mkv"
 
                 logger.info(f"--- Step {i+1}/{len(enabled_steps)}: {name} ---")
                 current_input = step.run(current_input, step_output)
@@ -152,12 +152,7 @@ class AdaptivePipeline:
             min_duration=self.min_scene_duration,
         )
 
-        if len(scenes) <= 1:
-            logger.info("Single scene detected — running standard pipeline")
-            pipeline = Pipeline(self.base_config)
-            return pipeline.run(input_path, output_path)
-
-        # Phase 2: Analyze scenes
+        # Phase 2: Analyze scenes (always — even single scene benefits)
         logger.info("\n--- Phase 2: Scene Analysis ---")
         scenes = analyze_scenes(input_path, scenes)
 
@@ -165,7 +160,19 @@ class AdaptivePipeline:
         logger.info("\n--- Phase 3: Adaptive Config Generation ---")
         scenes = generate_scene_configs(scenes)
 
-        # Phase 4: Split, process, join
+        # Single scene — apply adaptive config directly, no split/join needed
+        if len(scenes) <= 1:
+            logger.info("\n--- Phase 4: Processing (single scene, adaptive settings) ---")
+            scene = scenes[0]
+            adapted_config = apply_overrides(self.base_config, scene.config_overrides)
+
+            if scene.config_overrides:
+                logger.info(f"  Adaptive overrides: {_summarize_overrides(scene.config_overrides)}")
+
+            pipeline = Pipeline(adapted_config)
+            return pipeline.run(input_path, output_path)
+
+        # Multiple scenes — split, process each with its own settings, rejoin
         logger.info("\n--- Phase 4: Processing ---")
         temp_dir = tempfile.mkdtemp(prefix="vhs_adaptive_")
         temp_dir_path = Path(temp_dir)
@@ -176,19 +183,15 @@ class AdaptivePipeline:
             segments_dir.mkdir()
             processed_dir.mkdir()
 
-            # Split video into scene segments
             segment_paths = split_video(input_path, scenes, segments_dir)
 
-            # Process each scene with its own settings
             processed_paths = []
             for scene, segment_path in zip(scenes, segment_paths):
                 logger.info(f"\n--- Processing Scene {scene.index} ({scene.duration:.1f}s) ---")
 
-                # Build scene-specific config
                 scene_config = apply_overrides(self.base_config, scene.config_overrides)
                 scene_pipeline = Pipeline(scene_config)
 
-                # Log what's different for this scene
                 if scene.config_overrides:
                     logger.info(f"  Overrides: {_summarize_overrides(scene.config_overrides)}")
 
@@ -196,7 +199,6 @@ class AdaptivePipeline:
                 scene_pipeline.run(segment_path, processed_path)
                 processed_paths.append(processed_path)
 
-            # Join all processed scenes
             logger.info(f"\n--- Phase 5: Joining {len(processed_paths)} scenes ---")
             join_segments(processed_paths, output_path)
 
